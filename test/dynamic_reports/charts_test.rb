@@ -8,9 +8,8 @@ class ChartsTest < Test::Unit::TestCase
           type :svg
           height "350"
           width "250"
-          x_axis_label "new x-axis label"
-          y_axis_label "new y-axis label"
-          columns :created_at, :pageviews
+          columns :pageviews
+          label_column "created_at"
         end
         chart :the_other_chart_name do
           title "Some other chart"
@@ -29,10 +28,6 @@ class ChartsTest < Test::Unit::TestCase
       assert_equal "awesome report!", TheReport.chart_with_name(:the_chart_name).title
     end
 
-    should "allow setting the sub title" do
-      assert_equal "you won't need another!", TheReport.chart_with_name(:the_chart_name).sub_title
-    end
-
     should "allow setting their type" do
       assert_equal :svg, TheReport.chart_with_name(:the_chart_name).type
     end
@@ -45,27 +40,16 @@ class ChartsTest < Test::Unit::TestCase
       assert_equal "350", TheReport.chart_with_name(:the_chart_name).height
     end
     
-    should "allow setting their x-axis label of the chart" do
-      assert_equal "new x-axis label", TheReport.chart_with_name(:the_chart_name).x_axis_label
-    end
-    
-    should "allow setting their y-axis label of the chart" do
-      assert_equal "new y-axis label", TheReport.chart_with_name(:the_chart_name).y_axis_label
-    end
 
     should "allow specification of options to the chart beyond it's attributes." do
       hash = {
           :name => :the_chart_name, 
           :an => "option", 
           :another => "option",
-          :type=>:svg,
-          :x_axis_label=>"new x-axis label",
-          :y_axis_label=>"new y-axis label",
           :title=>"awesome report!",
           :height=>"350",
           :width=>"250",
-          :sub_title=>"you won't need another!",
-          :columns=>[:created_at, :pageviews]
+          :columns=>[:pageviews]
         }
         assert_equal hash, TheReport.chart_with_name(:the_chart_name).options
     end

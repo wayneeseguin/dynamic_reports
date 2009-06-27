@@ -22,6 +22,8 @@
   First we define a report in app/reports/orders_report.rb, something like:
   
     class OrdersReport < DynamicReports::Report
+      title "Orders Report"
+      subtitle "All orders recorded in database"
       columns :total, :created_at
     end
   
@@ -47,39 +49,47 @@
 
   Note that erb is the default templating engine since it is available by default in Ruby.
 
-  One may also surpress the default rendered styles you may specify that as an option as well:
-
-      render :text => OrdersReport.on(@orders).to_html(:style => false), :layout => "application"
-
   Now let us extend our report definition to specify a template to use!
 
     class OrdersReport < DynamicReports::Report
+      title "Orders Report"
+      subtitle "All orders recorded in database"
       columns :total, :created_at
-      template :orders_report
+
+      template :my_custom_template
     end
 
-  This will look in app/views/reports/ for a template named "orders_report.html.erb" by default. 
-  If you specify :engine => :haml then it will look for "orders_report.html.haml"
+  This will look in app/views/reports/ for a template named "my_custom_template.html.erb" by default.
+  If you specify :engine => :haml then it will look for "my_custom_template.html.haml"
 
   If you happen to have your report templates in a different location you can specify this as follows:
 
     class OrdersReport < DynamicReports::Report
+       title "Orders Report"
+      subtitle "All orders recorded in database"
       columns :total, :created_at
-      template :orders_report
+
+      template :my_custom_template
       views "app/views/admin/reports/"
     end
   
   And DynamicReports will look for the specified template in app/views/reports as well as app/views/admin/reports.
+
+  It is also worth pointing out that you can have as many dynamic reports in a view as you wish, simply include
+  each report render where desired within the view.
 
 == Charts
   
   Charts can be defined on a report easily. Let's say we wish to chart the total versus the item quantity sold for our Orders Report exmaple:
 
     class OrdersReport < DynamicReports::Report
+      title "Orders Report"
+      subtitle "All orders recorded in database"
       columns :total, :created_at
 
       chart :total_vs_quantity do
         columns :total, :quantity
+        label_column "created_at"
       end
     end
 
@@ -94,7 +104,40 @@
     * :bar
     * :pie
 
-  Other chart types are planned.
+  Since DynamicReport's charts utilize the Google Chart API, you can easily extend each chart by passing a hash of chart options as part
+  of the block.  The options are appended onto the request to the API so they should follow the Google's API commands (http://code.google.com/apis/chart/)
+
+  For example, to add min, max and average labels to the example chart, you would do something like this:
+
+    chart :total_vs_quantity, {:chxt => "r", :chxl => "0:|min|average|max"} do
+        columns :total, :quantity
+        label_column "created_at"
+    end
+
+== Stylizing
+
+  The reports are, by default, stylized with an inline style sheet.  The styles produce a nicely formatted grid with
+  a white on black header row and black on white columns with a gray border througout.
+
+  You can create your own styles by simply adding a class_name object to the report definition as such:
+
+    class OrdersReport < DynamicReports::Report
+      title "Orders Report"
+      subtitle "All orders recorded in database"
+      columns :total, :created_at
+
+      class_name "my_class_name"
+    end
+
+  This will cause DR to simply not include the inline style.  From there you can customer the styles using the
+  following sub-classes for your class name, for example:
+
+    .my_class_name .report_title {}
+    .my_class_name .report_subtitle {}
+    .my_class_name table tr th {}
+    .my_class_name table tr td {}
+    .my_class_name .report_charts {}        // all charts are displayed within this div
+    .my_class_name .report_chart {}         // represents an individual chart
 
 == Rails Usage
   

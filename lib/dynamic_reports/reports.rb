@@ -8,7 +8,7 @@ module DynamicReports
   class Report
     @@default_engine = "erb"
 
-    attr_accessor :name, :title, :sub_title, :columns, :charts, :records, :template, :style_name, :styles
+    attr_accessor :name, :title, :sub_title, :columns, :charts, :records, :template, :class_name, :styles
 
     # views accessor, array of view paths.
     def views
@@ -79,13 +79,13 @@ module DynamicReports
         options[:styles] ||= false
       end
 
-      def style_name(value = nil)
+      def class_name(value = nil)
         if value
-          options[:style_name] = value
-        elsif options[:style_name].empty?
-          options[:style_name] = self.to_s
+          options[:class_name] = value
+        elsif options[:class_name].empty?
+          options[:class_name] = self.to_s
         else
-          options[:style_name]
+          options[:class_name]
         end
       end
       
