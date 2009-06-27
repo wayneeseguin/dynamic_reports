@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: README [RDoc Documentation]</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <div class='name'>README</div>
+        <div class='paths'>
+          README
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Fri Jun 26 22:08:43 -0400 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1>Dynamic Reports</h1>
+            <pre>A dynamic reporting engine for Ruby / Rails</pre>
+            <h2>Reports</h2>
+            <pre>The dynamic reports gem was created to fill a HUGE hole that we felt existed in the&#x000A;Ruby community - the ability to QUICKLY create stylized admin reports and charts for&#x000A;people to use to view key metrics and data.&#x000A;&#x000A;Sample uses include the ability to quickly display sales data if your an eShop, our&#x000A;site metrics if you are recording your own site visits, or user feedback if you are storing&#x000A;feedback in a model somewhere.&#x000A;&#x000A;Basically, with DR you can create a stylized table of ANY information found in a model&#x000A;(kind of like looking at the grid output from a GUI query analyzer) as well as add Google&#x000A;Charts API powered line, pie, bar or column charts of any numeric data.  All this can&#x000A;be done by simply creating a report definition and feeding it your data.&#x000A;&#x000A;While this library is usable in any Ruby application it was made mainly with Rails in mind.&#x000A;Suppose we have an online store and we wish to add reporting to the admin area quickly and easily.&#x000A;First we define a report in app/reports/orders_report.rb, something like:&#x000A;&#x000A;  class OrdersReport &lt; DynamicReports::Report&#x000A;    title &quot;Orders Report&quot;&#x000A;    subtitle &quot;All orders recorded in database&quot;&#x000A;    columns :total, :created_at&#x000A;  end&#x000A;&#x000A;Then in our admin/reports controller (this can be any controller) we define an action to deliver the report:&#x000A;&#x000A;  def orders&#x000A;    @orders = Order.find(:all, :limit =&gt; 25)&#x000A;    render :text =&gt; OrdersReport.on(@orders).to_html, :layout =&gt; &quot;application&quot;&#x000A;  end&#x000A;&#x000A;This will render an html table containing some basic styling and containing the columns 'total' and 'created_at' from the order objects.&#x000A;Note that the report Title will be &quot;Orders Report&quot; and it's name will be :orders_report&#x000A;Report#on expects that it receives an object that responds to #each and&#x000A;That each object that it iterates over is either a&#x000A;  * An object&#x000A;  * A Hash&#x000A;that responds to a method / has keys for each column defined within the report.&#x000A;&#x000A;Templating engines may also be specified, currently :erb and :haml are supported (we will soon be adding :csv and :pdf) like so:&#x000A;&#x000A;    render :text =&gt; OrdersReport.on(@orders).to_html(:engine =&gt; :haml), :layout =&gt; &quot;application&quot;&#x000A;&#x000A;Note that erb is the default templating engine since it is available by default in Ruby.&#x000A;&#x000A;Now let us extend our report definition to specify a template to use!&#x000A;&#x000A;  class OrdersReport &lt; DynamicReports::Report&#x000A;    title &quot;Orders Report&quot;&#x000A;    subtitle &quot;All orders recorded in database&quot;&#x000A;    columns :total, :created_at&#x000A;&#x000A;    template :my_custom_template&#x000A;  end&#x000A;&#x000A;This will look in app/views/reports/ for a template named &quot;my_custom_template.html.erb&quot; by default.&#x000A;If you specify :engine =&gt; :haml then it will look for &quot;my_custom_template.html.haml&quot;&#x000A;&#x000A;If you happen to have your report templates in a different location you can specify this as follows:&#x000A;&#x000A;  class OrdersReport &lt; DynamicReports::Report&#x000A;     title &quot;Orders Report&quot;&#x000A;    subtitle &quot;All orders recorded in database&quot;&#x000A;    columns :total, :created_at&#x000A;&#x000A;    template :my_custom_template&#x000A;    views &quot;app/views/admin/reports/&quot;&#x000A;  end&#x000A;&#x000A;And DynamicReports will look for the specified template in app/views/reports as well as app/views/admin/reports.&#x000A;&#x000A;It is also worth pointing out that you can have as many dynamic reports in a view as you wish, simply include&#x000A;each report render where desired within the view.</pre>
+            <h2>Charts</h2>
+            <pre>Charts can be defined on a report easily. Let's say we wish to chart the total versus the item quantity sold for our Orders Report exmaple:&#x000A;&#x000A;  class OrdersReport &lt; DynamicReports::Report&#x000A;    title &quot;Orders Report&quot;&#x000A;    subtitle &quot;All orders recorded in database&quot;&#x000A;    columns :total, :created_at&#x000A;&#x000A;    chart :total_vs_quantity do&#x000A;      columns :total, :quantity&#x000A;      label_column &quot;created_at&quot;&#x000A;    end&#x000A;  end&#x000A;&#x000A;This will render a *line* chart by default displaying the columns total and quantity.&#x000A;Chart types may be specified easily:&#x000A;&#x000A;      type :bar&#x000A;&#x000A;Available chart types are:&#x000A;&#x000A;  * :line (default)&#x000A;  * :bar&#x000A;  * :pie&#x000A;&#x000A;Since DynamicReport's charts utilize the Google Chart API, you can easily extend each chart by passing a hash of chart options as part&#x000A;of the block.  The options are appended onto the request to the API so they should follow the Google's API commands (http://code.google.com/apis/chart/)&#x000A;&#x000A;For example, to add min, max and average labels to the example chart, you would do something like this:&#x000A;&#x000A;  chart :total_vs_quantity, {:chxt =&gt; &quot;r&quot;, :chxl =&gt; &quot;0:|min|average|max&quot;} do&#x000A;      columns :total, :quantity&#x000A;      label_column &quot;created_at&quot;&#x000A;  end</pre>
+            <h2>Stylizing</h2>
+            <pre>The reports are, by default, stylized with an inline style sheet.  The styles produce a nicely formatted grid with&#x000A;a white on black header row and black on white columns with a gray border througout.&#x000A;&#x000A;You can create your own styles by simply adding a class_name object to the report definition as such:&#x000A;&#x000A;  class OrdersReport &lt; DynamicReports::Report&#x000A;    title &quot;Orders Report&quot;&#x000A;    subtitle &quot;All orders recorded in database&quot;&#x000A;    columns :total, :created_at&#x000A;&#x000A;    class_name &quot;my_class_name&quot;&#x000A;  end&#x000A;&#x000A;This will cause DR to simply not include the inline style.  From there you can customer the styles using the&#x000A;following sub-classes for your class name, for example:&#x000A;&#x000A;  .my_class_name .report_title {}&#x000A;  .my_class_name .report_subtitle {}&#x000A;  .my_class_name table tr th {}&#x000A;  .my_class_name table tr td {}&#x000A;  .my_class_name .report_charts {}        // all charts are displayed within this div&#x000A;  .my_class_name .report_chart {}         // represents an individual chart</pre>
+            <h2>Rails Usage</h2>
+            <pre>Inside the initializer block in config/environment.rb&#x000A;&#x000A;  config.gem &quot;dynamic_reports&quot;&#x000A;&#x000A;Then define your reports (as exampled above) in app/reports/*_report.rb&#x000A;If you would like to customize the default report simply create your report templates&#x000A;within app/views/reports/*_report.&lt;content-type&gt;.&lt;engine&gt;.&#x000A;&#x000A;Two Rails features that we are currently working on are:&#x000A;&#x000A;  * generator&#x000A;  * render extensions</pre>
+            <h2>Optional Dependencies</h2>
+            <pre>We are currently examining solutions for csv, pdf and charting.&#x000A;&#x000A;  * Fastercsv     # csv&#x000A;  * Prawn         # pdf&#x000A;  * flying saucer # html =&gt; PDF - if jRuby available&#x000A;  * amcharts      # Charting, note that default is built in google charts.&#x000A;&#x000A;These will be defined/implemented using DynamicReports plugin API (not implemented yet)&#x000A;Which allows for user defined plugins of arbitrary types beyond html,csv,pdf,xml</pre>
+            <h2>Contact / Feedback</h2>
+            <pre>If you have any suggestions on improvement please send us an email.</pre>
+            <h2>Authors (alphabetically)</h2>
+            <pre>Joshua Lippiner (jlippiner@gmail.com)&#x000A;&#x000A;Wayne E. Seguin (wayneeseguin@gmail.com, irc: wayneeseguin)</pre>
+            <h2>Thanks To</h2>
+            <pre>* Daniel Neighman&#x000A;* Kenneth Kalmer (And his friend :))&#x000A;* Yehuda Katz&#x000A;&#x000A;For their encouragement, feedback and advise.</pre>
+            <h2>Source</h2>
+            <pre>http://github.com/wayneeseguin/dynamic_reports</pre>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>

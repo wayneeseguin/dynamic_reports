@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>: DynamicReports::Chart [RDoc Documentation]</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='class' id='wrapper'>
+      <div class='header'>
+        <h1 class='name'>
+          <span class='type'>Class</span>
+          DynamicReports::Chart
+        </h1>
+        <ol class='paths'>
+          <li>
+            <a href="../../files/lib/dynamic_reports/charts_rb.html">lib/dynamic_reports/charts.rb</a>
+          </li>
+        </ol>
+        <div class='parent'>
+          Parent:
+          <strong>Object</strong>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='method-list'>
+            <h2>Methods</h2>
+            <h3>public class</h3>
+            <ol>
+              <li><a href="#M000008">configure</a></li>
+              <li><a href="#M000009">new</a></li>
+            </ol>
+            <h3>public instance</h3>
+            <ol>
+              <li><a href="#M000018">columns</a></li>
+              <li><a href="#M000016">height</a></li>
+              <li><a href="#M000013">label_column</a></li>
+              <li><a href="#M000012">name</a></li>
+              <li><a href="#M000017">no_labels</a></li>
+              <li><a href="#M000010">options</a></li>
+              <li><a href="#M000011">title</a></li>
+              <li><a href="#M000014">type</a></li>
+              <li><a href="#M000015">width</a></li>
+            </ol>
+          </div>
+          <div id='section'>
+            <div id='methods'>
+              <h2>Public class methods</h2>
+              <div class='public-class method' id='method-M000008'>
+                <a name='M000008'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>configure</span>
+                  <span class='arguments'>(name, *chart_options, &amp;block)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000008-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000008-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 5</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">configure</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">chart_options</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">chart_options</span> = <span class="ruby-identifier">chart_options</span>.<span class="ruby-identifier">shift</span> <span class="ruby-operator">||</span> {}&#x000A;      <span class="ruby-identifier">chart</span> = <span class="ruby-identifier">new</span>(<span class="ruby-identifier">chart_options</span>)&#x000A;      <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">instance_eval</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)&#x000A;      <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">name</span> <span class="ruby-identifier">name</span>&#x000A;      <span class="ruby-identifier">chart</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-class method' id='method-M000009'>
+                <a name='M000009'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>new</span>
+                  <span class='arguments'>(*chart_options)</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000009-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000009-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 13</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">chart_options</span>)&#x000A;      <span class="ruby-identifier">chart_options</span> = <span class="ruby-identifier">chart_options</span>.<span class="ruby-identifier">shift</span> <span class="ruby-operator">||</span> {}&#x000A;      <span class="ruby-identifier">options</span>.<span class="ruby-identifier">merge!</span>(<span class="ruby-identifier">chart_options</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <h2>Public instance methods</h2>
+              <div class='public-instance method' id='method-M000018'>
+                <a name='M000018'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>columns</span>
+                  <span class='arguments'>(*array)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional) Accessor for columns
+                  </p>
+                  <p>
+                  Pass an array of symbols to define columns to chart. Columns MUST be
+                  numeric in value to chart.
+                  </p>
+                  <p>
+                  Example:
+                  </p>
+                  <pre>columns :pageviews, :visits</pre>
+                  <p>
+                  You may leave this accessor blank to default to the report columns
+                  specified that are numeric.
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000018-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000018-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 102</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">columns</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">array</span>)&#x000A;      <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">array</span>.<span class="ruby-identifier">empty?</span>&#x000A;        <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">array</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>)&#x000A;          <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:columns</span>] = <span class="ruby-identifier">array</span>&#x000A;        <span class="ruby-keyword kw">else</span>&#x000A;          <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Report columns must be specified.&quot;</span>&#x000A;        <span class="ruby-keyword kw">end</span>&#x000A;      <span class="ruby-keyword kw">else</span>&#x000A;        <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:columns</span>]&#x000A;      <span class="ruby-keyword kw">end</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000016'>
+                <a name='M000016'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>height</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional - Default = 175). Accessor used to set the height, in pixels, of
+                  the chart.
+                  </p>
+                  <pre>height &quot;350&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000016-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000016-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 77</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">height</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:height</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:height</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;175&quot;</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000013'>
+                <a name='M000013'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>label_column</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional) Accessor used by bar and pie charts to determine the independent
+                  varible chart labels. Due to size constraints this is NOT used by column or
+                  line charts, but you can add labels to the X-axis for those charts via
+                  chart_options and passing Google <a href="Chart.html">Chart</a> API
+                  calls.&#8220;
+                  </p>
+                  <p>
+                  <a href="Chart.html#M000013">label_column</a> should be a SINGLE column
+                  name from the dataset.
+                  </p>
+                  <pre>label_column &quot;recorded_at&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000013-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000013-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 49</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">label_column</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:label_column</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:label_column</span>]&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000012'>
+                <a name='M000012'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>name</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  Accessor used to set or get a specific report. Must be unique:
+                  </p>
+                  <pre>name &quot;PV_Visits&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000012-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000012-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 35</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:name</span>] = <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_sym</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:name</span>]&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000017'>
+                <a name='M000017'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>no_labels</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional - Default = false). Accessor used to determine if axis labels
+                  should be shown. By default y-axis labels are shown.
+                  </p>
+                  <pre>no_labels true</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000017-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000017-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 86</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">no_labels</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:no_labels</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:no_labels</span>]&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000010'>
+                <a name='M000010'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>options</span>
+                  <span class='arguments'>()</span>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000010-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000010-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 18</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">options</span>&#x000A;      <span class="ruby-ivar">@options</span> <span class="ruby-operator">||=</span> {} ; <span class="ruby-ivar">@options</span>&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000011'>
+                <a name='M000011'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>title</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional) Accessor used to set the chart title:
+                  </p>
+                  <pre>title &quot;Pageviews versus Visits&quot;</pre>
+                  <p>
+                  This is displayed above the chart
+                  </p>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000011-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000011-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 27</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:title</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:title</span>]&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000014'>
+                <a name='M000014'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>type</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional - Default = line). Accessor used to determine the type of chart
+                  to display. Valid options are line, column, bar or pie:
+                  </p>
+                  <pre>type &quot;bar&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000014-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000014-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 59</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">type</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:type</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:type</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">:line</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+              <div class='public-instance method' id='method-M000015'>
+                <a name='M000015'>      </a>
+                <div class='synopsis'>
+                  <span class='name'>width</span>
+                  <span class='arguments'>(value = nil)</span>
+                </div>
+                <div class='description'>
+                  <p>
+                  (Optional - Default = 250). Accessor used to set the width, in pixels, of
+                  the chart.
+                  </p>
+                  <pre>width &quot;400&quot;</pre>
+                </div>
+                <div class='source'>
+                  <a class='source-toggle' href='#' onclick="toggleCode('M000015-source'); return false">
+                    [show source]
+                  </a>
+                  <pre id='M000015-source'><span class="ruby-comment cmt"># File lib/dynamic_reports/charts.rb, line 68</span>&#x000A;    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">width</span>(<span class="ruby-identifier">value</span> = <span class="ruby-keyword kw">nil</span>)&#x000A;      <span class="ruby-identifier">value</span> <span class="ruby-value">? </span><span class="ruby-identifier">options</span>[<span class="ruby-identifier">:width</span>] = <span class="ruby-identifier">value</span> <span class="ruby-operator">:</span> (<span class="ruby-identifier">options</span>[<span class="ruby-identifier">:width</span>] <span class="ruby-operator">||</span> <span class="ruby-value str">&quot;250&quot;</span>)&#x000A;    <span class="ruby-keyword kw">end</span></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
