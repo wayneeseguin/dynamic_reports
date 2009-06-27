@@ -1,0 +1,62 @@
+- if report.styles.nil?
+  %style{type => "text/css"}
+    \.dynamic_report .report_title {
+    font-size:16pt;
+    font-weight:bold;
+    margin:10px 0px;
+    }
+    \.dynamic_report .report_subtitle {
+    font-size:14pt;
+    color:black;
+    margin:10px 0px;
+    }
+    \.dynamic_report table tr th {
+    color: white;
+    background: gray;
+    padding:5px;
+    }
+    \.dynamic_report table tr td {
+    border: 1px solid black;
+    padding:3px 15px;
+    }
+    \.dynamic_report .report_charts {
+    width:100%;
+    }
+    \.dynamic_report .report_chart {
+    margin:15px;
+    }
+
+.dynamic_report{ :id => report.style_name }
+  - if report.title
+    %h2.report_title
+      = report.title
+
+  - if report.sub_title
+    %h3.report_sub_title
+      = report.sub_title
+
+  %table.report{ :cellspacing => "0", :border => "0", :cellpadding => "0" }
+    %thead.report_header
+      %tr.report_header_row
+        - report.columns.each do |column|
+          %th
+            = options[:titleize] ? titleize(column) : column
+    %tbody.report_body
+      - report.records.each do |record|
+        %tr.report_row
+          - report.columns.each do |column|
+            %td
+              - if record.is_a?(Hash)
+                = (options[:commas] == true) ? commify(record[column]) : record[column]
+              - elsif record.respond_to?(column.to_sym)
+                = (options[:commas] == true) ? commify(record.send(column.to_sym)) : record.send(column.to_sym)
+              - else
+                = column
+
+  - if report.charts && report.charts.class === Hash
+    - report.charts.each_pair do |name, chart|
+      .chart
+        %h2
+          = name
+        %img{:src => chart_url(chart), :alt => name}
+

@@ -1,0 +1,11 @@
+# Feedback
+# it would be nice if it was just a template handler in Rails
+# ActionView::TemplateHandlers::ERB
+# since your stuff is all ERB you can just return the file contents I think
+# and then you also want to add a RenderOption, but I think RenderOptions are limited to completely taking over the process atm, instead of supplementing
+# so we have to do something about that
+
+
+
+# Should be able to hook reports into models directly somehow, cleanly
+#   

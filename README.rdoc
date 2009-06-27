@@ -1,0 +1,146 @@
+= Dynamic Reports
+
+  A dynamic reporting engine for Ruby / Rails
+
+== Reports
+  
+  The dynamic reports gem was created to fill a HUGE hole that we felt existed in the 
+  Ruby community - the ability to QUICKLY create stylized admin reports and charts for 
+  people to use to view key metrics and data. 
+
+  Sample uses include the ability to quickly display sales data if your an eShop, our 
+  site metrics if you are recording your own site visits, or user feedback if you are storing 
+  feedback in a model somewhere.
+
+  Basically, with DR you can create a stylized table of ANY information found in a model 
+  (kind of like looking at the grid output from a GUI query analyzer) as well as add Google 
+  Charts API powered line, pie, bar or column charts of any numeric data.  All this can 
+  be done by simply creating a report definition and feeding it your data.
+
+  While this library is usable in any Ruby application it was made mainly with Rails in mind.
+  Suppose we have an online store and we wish to add reporting to the admin area quickly and easily.
+  First we define a report in app/reports/orders_report.rb, something like:
+  
+    class OrdersReport < DynamicReports::Report
+      columns :total, :created_at
+    end
+  
+  Then in our admin/reports controller (this can be any controller) we define an action to deliver the report:
+  
+    def orders
+      @orders = Order.find(:all, :limit => 25)
+      render :text => OrdersReport.on(@orders).to_html, :layout => "application"
+    end
+    
+  This will render an html table containing some basic styling and containing the columns 'total' and 'created_at' from the order objects.
+  Note that the report Title will be "Orders Report" and it's name will be :orders_report
+  Report#on expects that it receives an object that responds to #each and
+  That each object that it iterates over is either a
+    * An object
+    * A Hash
+  that responds to a method / has keys for each column defined within the report.
+ 
+
+  Templating engines may also be specified, currently :erb and :haml are supported (we will soon be adding :csv and :pdf) like so:
+
+      render :text => OrdersReport.on(@orders).to_html(:engine => :haml), :layout => "application"
+
+  Note that erb is the default templating engine since it is available by default in Ruby.
+
+  One may also surpress the default rendered styles you may specify that as an option as well:
+
+      render :text => OrdersReport.on(@orders).to_html(:style => false), :layout => "application"
+
+  Now let us extend our report definition to specify a template to use!
+
+    class OrdersReport < DynamicReports::Report
+      columns :total, :created_at
+      template :orders_report
+    end
+
+  This will look in app/views/reports/ for a template named "orders_report.html.erb" by default. 
+  If you specify :engine => :haml then it will look for "orders_report.html.haml"
+
+  If you happen to have your report templates in a different location you can specify this as follows:
+
+    class OrdersReport < DynamicReports::Report
+      columns :total, :created_at
+      template :orders_report
+      views "app/views/admin/reports/"
+    end
+  
+  And DynamicReports will look for the specified template in app/views/reports as well as app/views/admin/reports.
+
+== Charts
+  
+  Charts can be defined on a report easily. Let's say we wish to chart the total versus the item quantity sold for our Orders Report exmaple:
+
+    class OrdersReport < DynamicReports::Report
+      columns :total, :created_at
+
+      chart :total_vs_quantity do
+        columns :total, :quantity
+      end
+    end
+
+  This will render a *line* chart by default displaying the columns total and quantity.
+  Chart types may be specified easily:
+  
+        type :bar
+  
+  Available chart types are:
+
+    * :line (default)
+    * :bar
+    * :pie
+
+  Other chart types are planned.
+
+== Rails Usage
+  
+  Inside the initializer block in config/environment.rb 
+
+    config.gem "dynamic_reports"
+
+  Then define your reports (as exampled above) in app/reports/*_report.rb
+  If you would like to customize the default report simply create your report templates 
+  within app/views/reports/*_report.<content-type>.<engine>.
+
+  Two Rails features that we are currently working on are:
+
+    * generator
+    * render extensions
+
+== Optional Dependencies
+
+  We are currently examining solutions for csv, pdf and charting.
+
+    * Fastercsv     # csv
+    * Prawn         # pdf
+    * flying saucer # html => PDF - if jRuby available
+    * amcharts      # Charting, note that default is built in google charts.
+
+  These will be defined/implemented using DynamicReports plugin API (not implemented yet)
+  Which allows for user defined plugins of arbitrary types beyond html,csv,pdf,xml
+
+== Contact / Feedback
+
+  If you have any suggestions on improvement please send us an email.
+
+== Authors (alphabetically)
+
+  Joshua Lippiner (jlippiner@gmail.com)
+
+  Wayne E. Seguin (wayneeseguin@gmail.com, irc: wayneeseguin)
+
+== Thanks To
+
+  * Daniel Neighman
+  * Kenneth Kalmer (And his friend :))
+  * Yehuda Katz
+
+  For their encouragement, feedback and advise.
+
+== Source
+  http://github.com/wayneeseguin/dynamic_reports
+

@@ -1,0 +1,73 @@
+<% if report.style_name.nil? %>
+  <style type="text/css">
+    .dynamic_report .report_title {
+      font-size:16pt;
+      font-weight:bold;
+      margin:10px 0px;
+    }
+    .dynamic_report .report_subtitle {
+      font-size:14pt;
+      color:black;
+      margin:10px 0px;
+    }
+    .dynamic_report table tr th {
+      color: white;
+      background: gray;
+      padding:5px;
+    }
+    .dynamic_report table tr td {
+      border: 1px solid black;
+      padding:3px 15px;
+    }
+    .dynamic_report .report_charts {
+      width:100%;
+    }
+
+    .dynamic_report .report_chart {
+      margin:15px;
+    }
+  </style>
+<% end %>
+
+<div id="<%= report.style_name %>" class="dynamic_report">
+  <%= "<div class='report_title'>#{report.title}</div>" if report.title %>
+  <%= "<div class='report_subtitle'>#{report.sub_title}</div>" if report.sub_title %>
+  <table class="report" border="0" cellpadding="0" cellspacing="0">
+    <thead class="report_header">
+      <tr class="report_header_row">
+        <% report.columns.each do |column| %>
+          <th>
+            <%= options[:titleize] ? titleize(column) : column %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody class="report_body">
+      <% report.records.each do |record| %>
+        <tr class="report_row">
+          <% report.columns.each do |column| %>
+            <td>
+              <% if record.is_a?(Hash) %>
+                <%= (options[:commas] == true) ? commify(record[column]) : record[column] %>
+              <% elsif record.respond_to?(column.to_sym) %>
+                <%= (options[:commas] == true) ? commify(record.send(column.to_sym)) : record.send(column.to_sym) %>
+              <% else %>
+                <%= column %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="report_charts">
+    <% report.charts.to_a.each do |chart| %>
+      <span class="report_chart">
+        <%=  "<img src='#{chart_url(chart,report)}' alt='#{chart.name}'>" %>
+      </span>
+    <% end %>
+  </div>
+
+</div>
+

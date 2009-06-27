@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>File: README.rdoc [Dynamic Reports]</title>
+
+	<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+</head>
+
+<body class="file">
+	<div id="metadata">
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./HISTORY.html">HISTORY</a></li>
+				
+					<li class="file"><a href="./README_rdoc.html">README.rdoc</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./DynamicReports.html">DynamicReports</a></li>
+				
+					<li><a href="./DynamicReports/Chart.html">DynamicReports::Chart</a></li>
+				
+					<li><a href="./DynamicReports/Charts.html">DynamicReports::Charts</a></li>
+				
+					<li><a href="./DynamicReports/Report.html">DynamicReports::Report</a></li>
+				
+					<li><a href="./DynamicReports/Templates.html">DynamicReports::Templates</a></li>
+				
+					<li><a href="./DynamicReports/View.html">DynamicReports::View</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1>Dynamic Reports</h1>
+<pre>
+  A dynamic reporting engine for Ruby / Rails
+</pre>
+<h2>Reports</h2>
+<pre>
+  The dynamic reports gem was created to fill a HUGE hole that we felt existed in the
+  Ruby community - the ability to QUICKLY create stylized admin reports and charts for
+  people to use to view key metrics and data.
+
+  Sample uses include the ability to quickly display sales data if your an eShop, our
+  site metrics if you are recording your own site visits, or user feedback if you are storing
+  feedback in a model somewhere.
+
+  Basically, with DR you can create a stylized table of ANY information found in a model
+  (kind of like looking at the grid output from a GUI query analyzer) as well as add Google
+  Charts API powered line, pie, bar or column charts of any numeric data.  All this can
+  be done by simply creating a report definition and feeding it your data.
+
+  While this library is usable in any Ruby application it was made mainly with Rails in mind.
+  Suppose we have an online store and we wish to add reporting to the admin area quickly and easily.
+  First we define a report in app/reports/orders_report.rb, something like:
+
+    class OrdersReport &lt; DynamicReports::Report
+      columns :total, :created_at
+    end
+
+  Then in our admin/reports controller (this can be any controller) we define an action to deliver the report:
+
+    def orders
+      @orders = Order.find(:all, :limit =&gt; 25)
+      render :text =&gt; OrdersReport.on(@orders).to_html, :layout =&gt; &quot;application&quot;
+    end
+
+  This will render an html table containing some basic styling and containing the columns 'total' and 'created_at' from the order objects.
+  Note that the report Title will be &quot;Orders Report&quot; and it's name will be :orders_report
+  Report#on expects that it receives an object that responds to #each and
+  That each object that it iterates over is either a
+    * An object
+    * A Hash
+  that responds to a method / has keys for each column defined within the report.
+
+  Templating engines may also be specified, currently :erb and :haml are supported (we will soon be adding :csv and :pdf) like so:
+
+      render :text =&gt; OrdersReport.on(@orders).to_html(:engine =&gt; :haml), :layout =&gt; &quot;application&quot;
+
+  Note that erb is the default templating engine since it is available by default in Ruby.
+
+  One may also surpress the default rendered styles you may specify that as an option as well:
+
+      render :text =&gt; OrdersReport.on(@orders).to_html(:style =&gt; false), :layout =&gt; &quot;application&quot;
+
+  Now let us extend our report definition to specify a template to use!
+
+    class OrdersReport &lt; DynamicReports::Report
+      columns :total, :created_at
+      template :orders_report
+    end
+
+  This will look in app/views/reports/ for a template named &quot;orders_report.html.erb&quot; by default.
+  If you specify :engine =&gt; :haml then it will look for &quot;orders_report.html.haml&quot;
+
+  If you happen to have your report templates in a different location you can specify this as follows:
+
+    class OrdersReport &lt; DynamicReports::Report
+      columns :total, :created_at
+      template :orders_report
+      views &quot;app/views/admin/reports/&quot;
+    end
+
+  And DynamicReports will look for the specified template in app/views/reports as well as app/views/admin/reports.
+</pre>
+<h2>Charts</h2>
+<pre>
+  Charts can be defined on a report easily. Let's say we wish to chart the total versus the item quantity sold for our Orders Report exmaple:
+
+    class OrdersReport &lt; DynamicReports::Report
+      columns :total, :created_at
+
+      chart :total_vs_quantity do
+        columns :total, :quantity
+      end
+    end
+
+  This will render a *line* chart by default displaying the columns total and quantity.
+  Chart types may be specified easily:
+
+        type :bar
+
+  Available chart types are:
+
+    * :line (default)
+    * :bar
+    * :pie
+
+  Other chart types are planned.
+</pre>
+<h2>Rails Usage</h2>
+<pre>
+  Inside the initializer block in config/environment.rb
+
+    config.gem &quot;dynamic_reports&quot;
+
+  Then define your reports (as exampled above) in app/reports/*_report.rb
+  If you would like to customize the default report simply create your report templates
+  within app/views/reports/*_report.&lt;content-type&gt;.&lt;engine&gt;.
+
+  Two Rails features that we are currently working on are:
+
+    * generator
+    * render extensions
+</pre>
+<h2>Optional Dependencies</h2>
+<pre>
+  We are currently examining solutions for csv, pdf and charting.
+
+    * Fastercsv     # csv
+    * Prawn         # pdf
+    * flying saucer # html =&gt; PDF - if jRuby available
+    * amcharts      # Charting, note that default is built in google charts.
+
+  These will be defined/implemented using DynamicReports plugin API (not implemented yet)
+  Which allows for user defined plugins of arbitrary types beyond html,csv,pdf,xml
+</pre>
+<h2>Contact / Feedback</h2>
+<pre>
+  If you have any suggestions on improvement please send us an email.
+</pre>
+<h2>Authors (alphabetically)</h2>
+<pre>
+  Joshua Lippiner (jlippiner@gmail.com)
+
+  Wayne E. Seguin (wayneeseguin@gmail.com, irc: wayneeseguin)
+</pre>
+<h2>Thanks To</h2>
+<pre>
+  * Daniel Neighman
+  * Kenneth Kalmer (And his friend :))
+  * Yehuda Katz
+
+  For their encouragement, feedback and advise.
+</pre>
+<h2>Source</h2>
+<pre>
+  http://github.com/wayneeseguin/dynamic_reports
+</pre>
+
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+</body>
+</html>
+
