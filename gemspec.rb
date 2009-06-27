@@ -1,7 +1,7 @@
 require "rubygems"
 
 library="dynamic_reports"
-version="0.0.0"
+version="0.0.1"
 
 Gem::Specification::new do |spec|
   $VERBOSE             = nil
@@ -18,7 +18,7 @@ Gem::Specification::new do |spec|
   spec.email           = "wayneeseguin@gmail.com, jlippiner@gmail.com"
   spec.homepage        = "http://github.com/wayneeseguin/direct_reports"
   # spec.test_suite_file = "test/#{library}.rb" if File::directory?("test")
-  #spec.add_dependency  "gchartrb", ">= 0.8"
+  #spec.add_dependency  "", ">= 0.0"
   spec.extensions      << "extconf.rb" if File::exists?("extconf.rb")
   spec.rubyforge_project = library
 end
