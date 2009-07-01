@@ -1,2 +1,7 @@
+0.0.2
+  - Github compaitble gemspec
+  - Passing tests
+0.0.1
+  - Template fixups
 0.0.0
   - Initial dynamic reports codebase.

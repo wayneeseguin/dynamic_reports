@@ -5,7 +5,7 @@
       font-weight:bold;
       margin:10px 0px;
     }
-    .dynamic_report .report_subtitle {
+    .dynamic_report .report_sub_title {
       font-size:14pt;
       color:black;
       margin:10px 0px;
@@ -31,7 +31,7 @@
 
 <div id="<%= report.class_name %>" class="dynamic_report">
   <%= "<div class='report_title'>#{report.title}</div>" if report.title %>
-  <%= "<div class='report_subtitle'>#{report.sub_title}</div>" if report.sub_title %>
+  <%= "<div class='report_sub_title'>#{report.sub_title}</div>" if report.sub_title %>
   <table class="report" border="0" cellpadding="0" cellspacing="0">
     <thead class="report_header">
       <tr class="report_header_row">

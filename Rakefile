@@ -13,7 +13,7 @@ end
 
 desc "Build the dynamic_reports gem and then install it."
 task :gem do
-    puts `gem uninstall dynamic_reports ; rm -f dynamic_reports-0.0.0.gem; gem build gemspec.rb ; gem install ./dynamic_reports-0.0.0.gem --no-ri -l`
+    puts `gem uninstall dynamic_reports ; rm -f ./dynamic_reports*.gem; gem build dynamic_reports.gemspec ; gem install ./dynamic_reports*.gem --no-ri -l`
 end
 namespace :gem do 
   desc "Build the dynamic_reports gem."
