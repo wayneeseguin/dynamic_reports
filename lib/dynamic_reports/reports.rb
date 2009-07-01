@@ -24,7 +24,13 @@ module DynamicReports
       # Views setter and accessor.
       def views(*array)
         @views ||= ["#{File::dirname(File::expand_path(__FILE__))}/views/"]
-        array ? @views += array : @views
+        unless array.empty?
+          @views.unshift(array)
+          @views.flatten!
+          @views.uniq!
+        else
+          @views
+        end
       end
      
       # class level options accessor
@@ -100,7 +106,11 @@ module DynamicReports
       #   OrdersReport.template # => :orders
       #
       def template(value = nil)
-        value ? options[:template] = value : options[:template]
+        if value
+          @template = value
+          options[:template] = @template
+        end
+        @template ||= nil
       end
 
       # Accessor for columns
@@ -201,10 +211,15 @@ module DynamicReports
     def initialize(records, *new_options)
       new_options  = new_options.shift || {}
       @records = records
-      @views = []
-      @views << new_options.delete(:views) if new_options[:views]
-      @views += self.class.views
+
+      @views = self.class.views
+      @views.unshift(new_options.delete(:views)) if new_options[:views]
+      @views.flatten!
+      @views.uniq!
+
+      @template = self.class.template
       @template = new_options.delete(:template) if new_options[:template]
+
       @options = self.class.options.merge!(new_options)
       @options.each_pair do |key,value|
         if key == "chart"
@@ -233,6 +248,7 @@ module DynamicReports
       options = (options.shift || {}).merge!(@options || {})
       # todo: if rails is loaded set the default engine: dynamicreports::report.default_engine
       engine  = options.delete(:engine) || @@default_engine
+      options[:template] = self.class.template
       view.__send__("#{engine}", options)
     end
 

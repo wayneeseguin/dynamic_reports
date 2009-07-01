@@ -18,9 +18,6 @@ class ReportsTest < Test::Unit::TestCase
       @object_records = DynamicReports::Test::ObjectRecords.generate(TheReport, :count => 10)
     end
 
-    teardown do
-    end
-
     should "allow setting the title of a report" do
       assert_equal "Daily Report", TheReport.title
     end
@@ -28,10 +25,6 @@ class ReportsTest < Test::Unit::TestCase
     should "allow setting the sub title of a report" do
       assert_equal "Happens every day, ya!", TheReport.sub_title
     end
-    
-    #should "allow setting the report template base (not type/extension)" do
-    #  assert_equal TheReport.template, "my_special_template"
-    #end
     
     should "allow setting the columns to report on" do
       assert_equal [:recorded_at, :viewed_on, :pageviews_count, :visits_count, :conversions_count], TheReport.columns
@@ -50,7 +43,7 @@ class ReportsTest < Test::Unit::TestCase
       assert_match(/class="report_charts"/, TheReport.on(@array_records).to_html)
     end
     
-    context "Report with template specified" do
+    context "Report with templates and views specified" do
       setup do
         class SpecificTemplateReport < DynamicReports::Report
           name  "A report with specified template!"
@@ -62,9 +55,6 @@ class ReportsTest < Test::Unit::TestCase
         end
         @array_records  = DynamicReports::Test::ArrayRecords.generate(SpecificTemplateReport, :count => 10)
         @object_records = DynamicReports::Test::ObjectRecords.generate(SpecificTemplateReport, :count => 10)
-      end
-
-      teardown do
       end
 
       should "allow setting of the views directories" do
