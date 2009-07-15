@@ -68,9 +68,7 @@
           - report.columns.each do |column|
             %td
               = (options[:commas] == true) ? commify(linkcheck(record,column)) : linkcheck(record,column)
-        %tr.subreport_row{:style => "display:none"}
-          %td{:colspan => report.columns.size}
-            .subreport
+      
 
   - if report.charts && report.charts.class === Hash
     - report.charts.each_pair do |name, chart|
