@@ -8,7 +8,7 @@ module DynamicReports
   class Report
     @@default_engine = "erb"
 
-    attr_accessor :name, :title, :sub_title, :columns, :charts, :records, :template, :class_name, :styles
+    attr_accessor :name, :title, :sub_title, :columns, :charts, :records, :template, :class_name, :styles, :links
 
     # views accessor, array of view paths.
     def views
@@ -159,6 +159,29 @@ module DynamicReports
       def chart(name, *chart_options, &block)
         chart_options = chart_options.shift || {}
         charts(Chart.configure(name, chart_options, &block))
+      end
+      
+      # Return an array of links defined for the report.
+      def links(object=nil)
+        options[:links] ||= []
+        options[:links] << object if object
+        options[:links]
+      end
+      
+      # Define a link for the report
+      #
+      # Pass parameters within {}.  Parameters are replaced with the row values 
+      # from passed records.  You do NOT need to include a parameter value as a 
+      # report column for it to be used in a link. For example, you might 
+      # want to generate a link with an ID field in it but not display that id 
+      # in the actual report.  Just include {id} to do this.
+      #
+      # Example:
+      #
+      # link :visits, '/reports/{visit}/details?date={recorded_at}'
+      #
+      def link(column, url, link_options=nil)
+        links({:column => column, :url => url, :link_options => link_options})
       end
 
       # Method for instanciating a report instance on a set of given records.
