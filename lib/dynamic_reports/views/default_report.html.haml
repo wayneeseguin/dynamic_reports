@@ -12,11 +12,11 @@
     }
     \.dynamic_report table tr th {
     color: white;
-    background: gray;
+    background: #666666;
     padding:5px;
     }
     \.dynamic_report table tr td {
-    border: 1px solid black;
+    border: 1px solid #333333;
     padding:3px 15px;
     }
     \.dynamic_report .report_charts {
@@ -24,6 +24,21 @@
     }
     \.dynamic_report .report_chart {
     margin:15px;
+    }
+    \.dynamic_report .subreport_row td {
+    padding: 10px 10px 10px 20px;
+    background-color: #FFFFCC;
+    font-size: 95%;
+    }
+    \.dynamic_report .subreport table tr td {
+    border: 1px dotted #CCCC99;
+    padding:3px 5px;
+    background-color: white;
+    }    
+    \.dynamic_report .subreport table tr th {
+    color: black;
+    background: #CCCCCC;
+    padding:3px;
     }
 
 .dynamic_report{ :id => report.class_name }
@@ -40,18 +55,20 @@
       %tr.report_header_row
         - report.columns.each do |column|
           %th
-            = options[:titleize] ? titleize(column) : column
+            - if column.is_a?(Hash) 
+              - if column.keys.include?(:heading)            
+                = options[:titleize] ? titleize(column[:heading]) : column[:heading]
+              -else
+                = options[:titleize] ? titleize(column[:column]) : column[:column]                
+            -else
+              = options[:titleize] ? titleize(column) : column
     %tbody.report_body
       - report.records.each do |record|
         %tr.report_row
           - report.columns.each do |column|
             %td
-              - if record.is_a?(Hash)
-                = (options[:commas] == true) ? commify(record[column]) : record[column]
-              - elsif record.respond_to?(column.to_sym)
-                = (options[:commas] == true) ? commify(record.send(column.to_sym)) : record.send(column.to_sym)
-              - else
-                = column
+              = (options[:commas] == true) ? commify(linkcheck(record,column)) : linkcheck(record,column)
+      
 
   - if report.charts && report.charts.class === Hash
     - report.charts.each_pair do |name, chart|

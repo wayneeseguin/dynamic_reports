@@ -2,7 +2,7 @@ require "rake/testtask"
 
 task :default => ["test:all"]
 task :test    => ["test:all"]
-namespace :test do 
+namespace :test do
   desc "Run Test Suite"
   Rake::TestTask.new("all") do |test|
     test.pattern = "test/dynamic_reports.rb"
@@ -15,9 +15,9 @@ desc "Build the dynamic_reports gem and then install it (NO sudo)."
 task :gem do
     puts `gem uninstall dynamic_reports ; rm -f ./dynamic_reports*.gem; gem build dynamic_reports.gemspec ; gem install ./dynamic_reports*.gem --no-ri -l`
 end
-namespace :gem do 
+namespace :gem do
   desc "Build the dynamic_reports gem."
-  task :build do 
+  task :build do
     puts `gem build gemspec.rb`
   end
 

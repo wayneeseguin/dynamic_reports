@@ -22,7 +22,14 @@ require "dynamic_reports/vendor/google_chart"
 # require "dynamic_reports/rails"
 # For now placing the code right here:
 if defined?(Rails)
-  # Load all defined reports. 
+  # ath_to_lib = File.join(Rails.root, "app")    #adjust if necessary
+  #   path_to_tree = "#{path_to_lib}/reports"
+  #   Dir["#{path_to_tree}/**/*.rb"].each { |fn|
+  #     fn =~ /^#{Regexp.escape(path_to_lib)}\/(.*)\.rb$/
+  #     require $1
+  #   }
+
+  # Load all defined reports.
   # Question: How to get Rails to reload files other than ones matching the requested constant...
   #Dir.glob("#{File.join(Rails.root, "app", "reports")}/*.rb").each { |file| require file }
   ActiveSupport::Dependencies.load_paths << File.join(Rails.root, "app", "reports")
@@ -44,4 +51,3 @@ if defined?(Rails)
 
   # TODO: Generator
 end
-

@@ -32,7 +32,7 @@ module DynamicReports
 
     # TODO: Add Report Helpers for injection
     def titleize(object)
-      object.to_s.split('_').each{ |word| word.capitalize! }.join(' ') 
+      object.to_s.split('_').each{ |word| word.capitalize! }.join(' ')
     end
 
     def commify(object)
@@ -43,9 +43,49 @@ module DynamicReports
       end
     end
 
+    def linkcheck(record, column_object)
+      val = ''
+
+      if column_object.is_a?(Hash)
+        column = column_object[:column]
+      else
+        column = column_object
+      end
+
+      report.links.each do |link|
+        if link[:column] == column
+          url = link[:url]
+          url.scan(/\{(\w+)\}/).each do |parameter|
+            parameter = parameter.to_s
+            url = url.gsub("{#{parameter}}", CGI::escape(get_record_value(record, parameter.to_sym).to_s))
+          end
+
+          url_attribute_str = []
+          link[:link_options].keys.each do |key|
+            url_attribute_str << "#{key}='#{link[:link_options][key]}'"
+          end if link[:link_options]
+          
+          val = "<a href='#{url}' #{url_attribute_str.join(' ')}>#{get_record_value(record,column)}</a>"
+          break
+        end if link[:column]
+      end if report.links
+
+      val.blank? ? get_record_value(record,column) : val
+    end
+
+    def get_record_value(record, column)
+      if record.is_a?(Hash)
+        record[column]
+      elsif record.respond_to?(column.to_sym)
+        record.send(column.to_sym)
+      else
+        column
+      end
+    end
+
     def chart_url(chart,report)
       columns = chart.columns ? chart.columns : report.columns
-      chart_type = chart.type.nil? ?  :line : chart.type.to_sym 
+      chart_type = chart.type.nil? ?  :line : chart.type.to_sym
       case chart_type
       when :line
         Charts.line_chart(chart,columns,report)
@@ -62,7 +102,7 @@ module DynamicReports
     end
 
     private
-    
+
     def render(engine, template, options={}, locals={})
       # merge app-level options
       options = self.class.send(engine).merge(options) if self.class.respond_to?(engine)
@@ -74,7 +114,7 @@ module DynamicReports
       content_type = options.delete(:content_type)
       locals = options.delete(:locals) || locals || {}
       locals.merge!(:report => @report, :options => options || {})
-      
+
       # render template
       data, options[:filename], options[:line] = lookup_template(engine, template, views, content_type)
       output = __send__("render_#{engine}", template, data, options, locals)
@@ -101,7 +141,7 @@ module DynamicReports
           lookup_template(engine, cached[:template], views, content_type, cached[:filename], cached[:line])
         else
           filename = "#{template}.#{content_type}.#{engine}"
-          dir = views.to_a.detect do |view| 
+          dir = views.to_a.detect do |view|
             ::File.exists?(::File.join(view, filename))
           end
           if dir
@@ -172,7 +212,7 @@ module DynamicReports
       require engine.downcase
     end
 
- 
-    
+
+
   end
 end
