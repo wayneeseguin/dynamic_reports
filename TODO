@@ -1,5 +1,10 @@
 = General
-  * 
+  * Figure out how to all for the creation of a single report definition file within app/reports instead of one per report
+  * Change report definition from the current to something more like 
+  *     report :name do 
+  *         report def options
+  *     end
+  
 = Reports
   * Factory Generators (for records data)
   * Pdf engine option
