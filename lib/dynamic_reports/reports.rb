@@ -193,6 +193,27 @@ module DynamicReports
       def link(column, url, link_options=nil)
         links({:column => column, :url => url, :link_options => link_options})
       end
+      
+      # Define an inline subreport for the report
+      #
+      # Pass parameters within {}.  Parameters are replaced with the row values 
+      # from passed records.  You do NOT need to include a parameter value as a 
+      # report column for it to be used in a link. For example, you might 
+      # want to generate a subreport with an ID field in it but not display that id 
+      # in the actual report.  Just include {id} to do this.
+      #
+      # Example:
+      #
+      # subreport :visits, '/reports/{visit}/details?date={recorded_at}'
+      #
+      # The subreport should be created using the same report definition style 
+      # that you use for any other report.  
+      # 
+      def subreport(column, url, link_options=nil)
+        link_options ||= {}
+        link_options.merge!({:class => 'sub_report_link'}) 
+        links({:column => column, :url => url, :link_options => link_options})
+      end
 
       # Method for instanciating a report instance on a set of given records.
       #
@@ -210,14 +231,6 @@ module DynamicReports
       def on(records)
         new(records, @options)
       end
-
-      #--
-      # Methods for definining a sub report
-      #def link_column
-      #end
-      #def link_rows
-      #end
-
     end
 
     # Instantiate the report on a set of records.

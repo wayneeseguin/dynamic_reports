@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+# The dynamic_reports command line utility to copy needed resources
+
+require 'fileutils'
+
+puts "Getting resource and local directories..."
+resource_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'dynamic_reports', 'resources'))
+ss_path = File.join('public', 'stylesheets')
+js_path = File.join('public', 'javascripts')
+
+puts "Copying dynamic_reports.css to public/stylesheets"
+FileUtils.cp("#{resource_path}/dynamic_reports.css", ss_path) unless File.exists?("#{ss_path}/dynamic_reports.css")
+
+puts "Copying dynamic_reports.js to public/javascripts"
+FileUtils.cp("#{resource_path}/dynamic_reports.js", js_path) unless File.exists?("#{js_path}/dynamic_reports.js") 
+
+puts ""
+puts "Add the following lines to your application layout:"
+puts "--- ERB:"
+puts "<%= javascript_include_tag 'dynamic_reports.js' %>"
+puts "<%= stylesheet_link_tag 'dynamic_reports.css %>"
+puts ""
+puts "--- HAML:"
+puts "= javascript_include_tag 'dynamic_reports.js'"
+puts "= stylesheet_link_tag 'dynamic_reports.css'"
+puts ""
+puts "See RDoc for usage information"
+

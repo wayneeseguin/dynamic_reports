@@ -1,7 +1,7 @@
 = Dynamic Reports
 
   A dynamic reporting engine for Ruby / Rails
-
+  
 == Reports
   
   The dynamic reports gem was created to fill a HUGE hole that we felt existed in the 
@@ -114,32 +114,90 @@
         label_column "created_at"
     end
 
-== Stylizing
+== External Links
 
-  The reports are, by default, stylized with an inline style sheet.  The styles produce a nicely formatted grid with
-  a white on black header row and black on white columns with a gray border througout.
+  Dynamic Reports supports linking from any column within your table.  To add a link to a column, add the following 
+  to a report definition:
+  
+  link :column, url
+  
+  For example:
+  
+  class OrdersReport < DynamicReports::Report
+    title "Orders Report"
+    subtitle "All orders recorded in database"
+    columns :total, :created_at
+    
+    link :total, '/report/daily_sales'
+  end
+  
+  You can also pass parameters to the URL based on values from the underlying model.  To pass a parameter, surround the 
+  field name with {}.  The parameter does NOT need to be a displayed, column.  For example, you might want to pass 
+  an external link an ID column but not display this column on the table.  
+  
+  For example:
+  
+  class OrdersReport < DynamicReports::Report
+    title "Orders Report"
+    subtitle "All orders recorded in database"
+    columns :total, :created_at
+    
+    link :total, '/report/item_sales?id={id}'   # =>  Will substitute ID for the value of ID associated with that record
+  end
+  
+  
+== Subreports
 
-  You can create your own styles by simply adding a class_name object to the report definition as such:
-
-    class OrdersReport < DynamicReports::Report
-      title "Orders Report"
-      subtitle "All orders recorded in database"
-      columns :total, :created_at
-
-      class_name "my_class_name"
-    end
-
-  This will cause DR to simply not include the inline style.  From there you can customer the styles using the
-  following sub-classes for your class name, for example:
-
-    .my_class_name .report_title {}
-    .my_class_name .report_subtitle {}
-    .my_class_name table tr th {}
-    .my_class_name table tr td {}
-    .my_class_name .report_charts {}        // all charts are displayed within this div
-    .my_class_name .report_chart {}         // represents an individual chart
-
+  Dynamic Reports supports the display of a sub-report within any report.  This is accomplished using the jQuery library 
+  available at http://www.jquery.com.  
+  
+  Sub-reports are created using the same definition format that you would use to create a standard report.  The only 
+  difference is that it is displayed INLINE when an associated link is clicked.  
+  
+  A sub-report is defined using the same format as a LINK above, but is labeled as:
+  
+  subreport :column, url
+  
+  For example, if you wanted to show all sales and allow a user to click on a specific item to see all historic sales 
+  inline for just that item, you would do the following:
+  
+  IN CONTROLLER:
+  
+  def orders
+    @orders = Order.find(:all, :limit => 25)
+    render :text => OrdersReport.on(@orders).to_html, :layout => "application"
+  end
+  
+  def item_sales
+    @item_orders = Order.find_by_id(params[:id])
+    render :text => ItemSales.on(@orders).to_html, :layout => "application"
+  end
+  
+  REPORT DEFINITIONS
+  
+  class OrdersReport < DynamicReports::Report
+    title "Orders Report"
+    subtitle "All orders recorded in database"
+    columns :total, :created_at
+    
+    subreport :total, '/report/item_sales?id={id}'   # =>  Will substitute ID for the value of ID associated with that record
+  end
+  
+  class ItemSales < DynamicReports::Report
+    columns :item, :price, :created_at
+  end
+  
+  Subreports can also be nested.
+  
 == Rails Usage
+
+  The gem includes a stylesheet and javascript based on jQuery.  To add both to your Rails project, 
+  simply type "drsetup" from the project root.  This will add:
+
+  public/stylesheets/dynamic_reports.css  (controls style of dynamic reports)
+  public/javascripts/dynamic_reports.js   (controls display of subreports)
+
+  You can then modify these files as you see fit.
   
   Inside the initializer block in config/environment.rb 
 

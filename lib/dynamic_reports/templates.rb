@@ -47,7 +47,11 @@ module DynamicReports
       val = ''
 
       if column_object.is_a?(Hash)
-        column = column_object[:column]
+        if column_object.keys.include?(:column)
+          column = column_object[:column] 
+        else
+          column = column_object.keys.first # => Josh shortcut :)
+        end
       else
         column = column_object
       end
@@ -73,15 +77,6 @@ module DynamicReports
       val.blank? ? get_record_value(record,column) : val
     end
 
-    def get_record_value(record, column)
-      if record.is_a?(Hash)
-        record[column]
-      elsif record.respond_to?(column.to_sym)
-        record.send(column.to_sym)
-      else
-        column
-      end
-    end
 
     def chart_url(chart,report)
       columns = chart.columns ? chart.columns : report.columns
@@ -212,7 +207,15 @@ module DynamicReports
       require engine.downcase
     end
 
-
+     def get_record_value(record, column)
+        if record.is_a?(Hash)
+          record[column]
+        elsif record.respond_to?(column.to_sym)
+          record.send(column.to_sym)
+        else
+          column
+        end
+      end
 
   end
 end
