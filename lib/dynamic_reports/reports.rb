@@ -183,6 +183,12 @@ module DynamicReports
       def link(column, url, link_options=nil)
         links({:column => column, :url => url, :link_options => link_options})
       end
+      
+      def subreport(column, url, link_options=nil)
+        link_options ||= {}
+        link_options.merge!({:class => 'sub_report_link'}) 
+        links({:column => column, :url => url, :link_options => link_options})
+      end
 
       # Method for instanciating a report instance on a set of given records.
       #
@@ -200,14 +206,6 @@ module DynamicReports
       def on(records)
         new(records, @options)
       end
-
-      #--
-      # Methods for definining a sub report
-      #def link_column
-      #end
-      #def link_rows
-      #end
-
     end
 
     # Instantiate the report on a set of records.

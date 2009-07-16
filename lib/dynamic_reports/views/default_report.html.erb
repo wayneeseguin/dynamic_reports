@@ -1,51 +1,3 @@
-<% if report.class_name.nil? %>
-<style type="text/css">
-.dynamic_report .report_title {
-  font-size:16pt;
-  font-weight:bold;
-  margin:10px 0px;
-}
-.dynamic_report .report_subtitle {
-  font-size:14pt;
-  color:black;
-  margin:10px 0px;
-}
-.dynamic_report table tr th {
-  color: white;
-  background: gray;
-  padding:5px;
-}
-.dynamic_report table tr td {
-  border: 1px solid black;
-  padding:3px 15px;
-}
-.dynamic_report .report_charts {
-  width: 100%;
-}
-
-.dynamic_report .report_chart {
-  margin:15px;
-}
-
-.dynamic_report .subreport_row td {
-  padding: 10px 10px 10px 20px;
-  background-color: #FFFFCC;
-  font-size: 95%;
-}
-.dynamic_report .subreport table tr td {
-  border: 1px dotted #CCCC99;
-  padding:3px 5px;
-  background-color: white;
-}
-.dynamic_report .subreport table tr th {
-  color: black;
-  background: #CCCCCC;
-  padding:3px;
-}
-
-</style>
-<% end %>
-
 <div id="<%= report.class_name %>" class="dynamic_report">
 <%= "<div class='report_title'>#{report.title}</div>" if report.title %>
 <%= "<div class='report_subtitle'>#{report.sub_title}</div>" if report.sub_title %>
@@ -58,7 +10,7 @@
   <% if column.keys.include?(:heading) %>
   <%= options[:titleize] ? titleize(column[:heading]) : column[:heading] %>
   <% else %>
-  <%= options[:titleize] ? titleize(column[:column]) : column[:column] %>
+  <%= options[:titleize] ? titleize(column.values.first) : column.values.first  %>
   <% end %>
   <% else %>
   <%= options[:titleize] ? titleize(column) : column %>
@@ -87,5 +39,4 @@
         </span>
         <% end %>
         </div>
-
         </div>
