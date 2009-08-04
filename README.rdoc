@@ -237,7 +237,7 @@
 == Thanks To
 
   * Daniel Neighman
-  * Kenneth Kalmer (And his friend :))
+  * Kenneth Kalmer & Nic Young
   * Yehuda Katz
 
   For their encouragement, feedback and advise.
